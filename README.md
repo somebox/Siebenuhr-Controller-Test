@@ -1,4 +1,4 @@
-# Seibenuhr Controller Test Program
+# Siebenuhr Controller Test Program
 
 This program is designed to test the hardware components and basic functionality of the custom controller PCB for the Seibenuhr project. It allows interactive testing of LEDs, sensors, and input controls via the serial monitor and physical buttons/knob.
 
