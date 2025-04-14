@@ -54,6 +54,10 @@ This app uses PlatformIO, which can also be used inside of Cursor or other VSCod
 
 *example current sensor readings*
 
+## Changelog
+
+1.0 - Initial version Apr 13 2025
+1.0.1 - fixes to current measurement values, as we are using a 1mOhm shunt resistor.
 
 ### Note
 

@@ -7,7 +7,7 @@
 #include "fastled.h"
 
 // --- Program Info ---
-#define PROGRAM_VERSION "1.0"
+#define PROGRAM_VERSION "1.0.1"
 // --- End Program Info ---
 
 #define SDA_PIN 14
@@ -52,7 +52,7 @@ struct InputState {
 
 struct LedPwmState {
     bool isOn = false;
-    int brightness = 0; // 0-255
+    int brightness = 50; // 0-255
 };
 
 struct FastLedState {
@@ -158,11 +158,47 @@ void readAndPrintLightSensor() {
 void readAndPrintIna219() {
     if (millis() - lastSensorReadTime >= sensorReadInterval) {
         float busvoltage = ina219.getBusVoltage_V();
-        float shuntvoltage = ina219.getShuntVoltage_mV();
-        float current_mA = ina219.getCurrent_mA();
-        float loadvoltage = busvoltage + (shuntvoltage / 1000);
-        Serial.print("Bus V: "); Serial.print(busvoltage); Serial.print(" | Load V: "); Serial.print(loadvoltage);
-        Serial.print(" | Current: "); Serial.print(current_mA); Serial.println(" mA");
+        float shuntvoltage = ina219.getShuntVoltage_mV();  // in mV
+        float current_mA = shuntvoltage * 100.0;           // for 10 mΩ shunt
+        float loadvoltage = busvoltage + (shuntvoltage / 1000.0); // in V
+        float power_mW = busvoltage * current_mA;          // V * mA = mW
+
+        // Format Bus Voltage (already in V)
+        Serial.print("Bus: ");
+        Serial.print(busvoltage, 2);
+        Serial.print("V");
+
+        // Format Shunt Voltage (always in mV for INA219)
+        Serial.print(" | Shunt: ");
+        Serial.print(shuntvoltage, 2);
+        Serial.print("mV");
+
+        // Format Load Voltage (already in V)
+        Serial.print(" | Load: ");
+        Serial.print(loadvoltage, 2);
+        Serial.print("V");
+
+        // Format Current with adaptive units (mA or A)
+        Serial.print(" | Current: ");
+        if (abs(current_mA) >= 500.0) {
+            Serial.print(current_mA / 1000.0, 2); // Convert to A with 2 decimal places
+            Serial.print("A");
+        } else {
+            Serial.print(current_mA, 1); // Keep as mA with 1 decimal place
+            Serial.print("mA");
+        }
+
+        // Format Power with adaptive units (mW or W)
+        Serial.print(" | Power: ");
+        if (abs(power_mW) >= 500.0) {
+            Serial.print(power_mW / 1000.0, 2); // Convert to W with 2 decimal places
+            Serial.print("W");
+        } else {
+            Serial.print(power_mW, 1); // Keep as mW with 1 decimal place
+            Serial.print("mW");
+        }
+        
+        Serial.println();
         lastSensorReadTime = millis();
     }
 }
