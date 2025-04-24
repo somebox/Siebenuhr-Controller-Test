@@ -24,7 +24,7 @@ const unsigned char logo_bitmap_32x32[] PROGMEM = {
 // --- End Logo Bitmap ---
 
 // --- Program Info ---
-#define PROGRAM_VERSION "1.0.1"
+#define PROGRAM_VERSION "1.1.0"
 // --- End Program Info ---
 
 #define SDA_PIN 14
